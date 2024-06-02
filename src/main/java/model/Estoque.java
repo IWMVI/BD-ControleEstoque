@@ -10,6 +10,7 @@ import lombok.Setter;
 public class Estoque {
 	
 	private int id;
+	private String nome;
 	private List<Produto> produtos;
 	private int qtdTotal;
 	private int quantidade;

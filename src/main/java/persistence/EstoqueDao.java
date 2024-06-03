@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Estoque;
+import model.Produto;
 
 public class EstoqueDao {
 
@@ -16,24 +17,19 @@ public class EstoqueDao {
         this.gDao = gDao;
     }
 
-    public void inserir(Estoque estoque) throws SQLException, ClassNotFoundException {
+    public void inserir(Produto p, int quantidade) throws SQLException, ClassNotFoundException {
         Connection c = gDao.getConnection();
-        String sql = "INSERT INTO estoque (quantidade) VALUES (?)";
-       
-        PreparedStatement ps = c.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        ps.setInt(1, estoque.getQuantidade());
+        String sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
+
+        PreparedStatement ps = c.prepareStatement(sql);
+        ps.setInt(1, quantidade);
+        ps.setInt(2, p.getId());
         ps.executeUpdate();
 
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            int id = rs.getInt(1);
-            estoque.setId(id);
-        }
-
-        rs.close();
         ps.close();
         c.close();
     }
+
 
     public void atualizar(Estoque estoque) throws SQLException, ClassNotFoundException {
         Connection c = gDao.getConnection();
@@ -82,8 +78,8 @@ public class EstoqueDao {
 
     public Estoque consultarPorId(int id) throws SQLException, ClassNotFoundException {
         Connection c = gDao.getConnection();
-        String sql = "SELECT nome, quantidade FROM estoque WHERE nome LIKE ?";
-      
+        String sql = "SELECT nome, quantidade FROM estoque WHERE id = ?"; 
+
         PreparedStatement ps = c.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -91,7 +87,7 @@ public class EstoqueDao {
         Estoque estoque = null;
         if (rs.next()) {
             estoque = new Estoque();
-            estoque.setId(rs.getInt("id"));
+            estoque.setId(id);
             estoque.setNome(rs.getString("nome"));
             estoque.setQuantidade(rs.getInt("quantidade"));
         }
@@ -102,6 +98,7 @@ public class EstoqueDao {
 
         return estoque;
     }
+
     
     public void adicionarQuantidade(int quantidade) throws SQLException, ClassNotFoundException {
         Connection c = gDao.getConnection();

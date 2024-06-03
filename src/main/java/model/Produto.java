@@ -11,5 +11,7 @@ public class Produto {
 	private String nome;
 	private float valor;
 	private String valorFormatado;
+	private int estoqueID;
+	private int quantidade;
 	
 }

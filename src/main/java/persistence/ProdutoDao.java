@@ -12,164 +12,158 @@ import model.Relatorio;
 
 public class ProdutoDao implements ICrud<Produto> {
 
-    private GenericDao gDao;
+	private GenericDao gDao;
 
-    public ProdutoDao(GenericDao gDao) {
-        this.gDao = gDao;
-    }
+	public ProdutoDao(GenericDao gDao) {
+		this.gDao = gDao;
+	}
 
-    @Override
-    public void inserir(Produto t) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "INSERT INTO produto (nome, valor, quantidade, estoqueID) VALUES (?, ?, ?, ?)";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setString(1, t.getNome());
-        ps.setDouble(2, t.getValor());
+	@Override
+	public void inserir(Produto t) throws SQLException, ClassNotFoundException {
+	    Connection c = gDao.getConnection();
+	    
+	    String sql = "INSERT INTO produto (nome, valor) VALUES (?, ?)";
 
-        adicionarRelatorio(t);
+	    
+	    PreparedStatement ps = c.prepareStatement(sql);
+	    ps.setString(1, t.getNome());
+	    ps.setFloat(2, t.getValor());
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
-    }
-    
-    @Override
-    public void atualizar(Produto p) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql;
-        PreparedStatement ps;
+	    ps.execute();
+	    ps.close();
+	    c.close();
 
-        if (p.getNome() != null && !p.getNome().isEmpty()) {
-            sql = "UPDATE produto SET nome = ?, valor = ? WHERE id = ?";
-            ps = c.prepareStatement(sql);
-            ps.setString(1, p.getNome());
-            ps.setDouble(2, p.getValor());
-            ps.setInt(3, p.getId());
-        } else {
-            sql = "UPDATE produto SET valor = ? WHERE id = ?";
-            ps = c.prepareStatement(sql);
-            ps.setDouble(1, p.getValor());
-            ps.setInt(2, p.getId());
-        }
+	    adicionarRelatorio(t);
+	}
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
-    }
 
-    @Override
-    public void excluir(Produto t) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "DELETE FROM produto WHERE id = ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, t.getId());
-        ps.executeUpdate();
-        ps.close();
-        c.close();
-    }
+	@Override
+	public void atualizar(Produto p) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE produto SET nome = ?, valor = ? WHERE id = ?";
 
-    @Override
-    public List<Produto> listar() throws SQLException, ClassNotFoundException {
-        List<Produto> produtos = new ArrayList<>();
-        Connection c = gDao.getConnection();
-        String sql = "SELECT id, nome, valor, quantidade FROM produto WHERE nome LIKE ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setString(1, p.getNome());
+		ps.setFloat(2, p.getValor());
+		ps.setInt(3, p.getId());
+		ps.execute();
 
-        while (rs.next()) {
-            Produto p = new Produto();
-            p.setId(rs.getInt("id"));
-            p.setNome(rs.getString("nome"));
-            p.setValor(rs.getFloat("valor"));
-            produtos.add(p);
-        }
+		ps.close();
+		c.close();
+	}
 
-        rs.close();
-        ps.close();
-        c.close();
+	@Override
+	public void excluir(Produto t) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "DELETE FROM produto WHERE id = ?";
 
-        return produtos;
-    }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, t.getId());
+		ps.execute();
+		ps.close();
+		c.close();
+	}
 
-    @Override
-    public Produto consultar(Produto t) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "SELECT id, nome, valor, quantidade FROM produto WHERE nome LIKE ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setString(1, "%" + t.getNome() + "%");
-        ResultSet rs = ps.executeQuery();
+	@Override
+	public List<Produto> listar() throws SQLException, ClassNotFoundException {
+		List<Produto> produtos = new ArrayList<>();
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id, nome, valor FROM produto";
 
-        Produto produto = null;
-        if (rs.next()) {
-            produto = new Produto();
-            produto.setId(rs.getInt("id"));
-            produto.setNome(rs.getString("nome"));
-            produto.setValor(rs.getFloat("valor"));
-        }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
 
-        rs.close();
-        ps.close();
-        c.close();
+		while (rs.next()) {
+			Produto p = new Produto();
+			p.setId(rs.getInt("id"));
+			p.setNome(rs.getString("nome"));
+			p.setValor(rs.getFloat("valor"));
+			produtos.add(p);
+		}
 
-        return produto;
-    }
+		rs.close();
+		ps.close();
+		c.close();
 
-    public void adicionarQuantidade(Produto produto, int quantidade) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "UPDATE produto SET quantidade = quantidade + ? WHERE id = ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, quantidade);
-        ps.setInt(2, produto.getId());
+		return produtos;
+	}
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
+	@Override
+	public Produto consultar(Produto t) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id, nome, valor FROM produto WHERE nome LIKE ?";
 
-        adicionarRelatorio(produto, quantidade);
-    }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
 
-    public void removerQuantidade(Produto produto, int quantidade) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "UPDATE produto SET quantidade = quantidade - ? WHERE id = ?";
-       
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, quantidade);
-        ps.setInt(2, produto.getId());
+		Produto produto = null;
+		if (rs.next()) {
+			produto = new Produto();
+			produto.setId(rs.getInt("id"));
+			produto.setNome(rs.getString("nome"));
+			produto.setValor(rs.getFloat("valor"));
+		}
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
+		rs.close();
+		ps.close();
+		c.close();
 
-        adicionarRelatorio(produto, -quantidade);
-    }
+		return produto;
+	}
 
-    private void adicionarRelatorio(Produto produto) throws ClassNotFoundException, SQLException {
-        Relatorio relatorio = new Relatorio();
-        relatorio.setDescricao("Produto cadastrado: " + produto.getNome().toString() + ", valor R$" + produto.getValor());
+	public void adicionarQuantidade(Produto p, int quantidade) throws ClassNotFoundException, SQLException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE produto SET quantidade = quantidade + ? WHERE id = ?";
 
-        RelatorioDao rDao = new RelatorioDao(gDao);
-        rDao.inserir(relatorio);
-    }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, quantidade);
+		ps.setInt(2, p.getId());
 
-    private void adicionarRelatorio(Produto produto, int quantidade) throws ClassNotFoundException, SQLException {
-        Relatorio relatorio = new Relatorio();
-        String descricaoProduto;
+		ps.execute();
+		ps.close();
+		c.close();
 
-        if (quantidade > 0) {
-            descricaoProduto = ("Entrada de " + quantidade + " unidades do produto #ID " + produto.getId());
-        } else {
-            descricaoProduto = ("Saída de " + (quantidade * (-1)) + " unidades do produto #ID " + produto.getId());
-        }
+		adicionarRelatorio(p, quantidade);
+	}
 
-        relatorio.setId(1);
-        relatorio.setDescricao(descricaoProduto);
+	public void removerQuantidade(Produto p, int quantidade) throws ClassNotFoundException, SQLException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE produto SET quantidade = quantidade - ? WHERE id = ?";
 
-        RelatorioDao rDao = new RelatorioDao(gDao);
-        rDao.inserir(relatorio);
-    }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, quantidade);
+		ps.setInt(2, p.getId());
+
+		ps.execute();
+		ps.close();
+		c.close();
+
+		adicionarRelatorio(p, quantidade);
+	}
+
+	private void adicionarRelatorio(Produto produto) throws ClassNotFoundException, SQLException {
+		Relatorio relatorio = new Relatorio();
+		relatorio.setDescricao("Produto cadastrado: " + produto.getNome() + ", valor R$" + produto.getValor());
+
+		RelatorioDao rDao = new RelatorioDao(gDao);
+		rDao.inserir(relatorio);
+	}
+
+	public void adicionarRelatorio(Produto produto, int quantidade) throws ClassNotFoundException, SQLException {
+		Relatorio relatorio = new Relatorio();
+		String descricao = "";
+
+		if (quantidade > 0) {
+			descricao = "Entrada de " + quantidade + " itens do produto #ID " + produto.getId();
+		}
+		if (quantidade < 0) {
+			descricao = "Saída de " + (quantidade * (-1)) + " itens do produto #ID " + produto.getId();
+		}
+
+		relatorio.setId(1);
+		relatorio.setDescricao(descricao);
+
+		RelatorioDao rDao = new RelatorioDao(gDao);
+		rDao.inserir(relatorio);
+	}
 }

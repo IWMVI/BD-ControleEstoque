@@ -1,25 +1,26 @@
 CREATE DATABASE controleEstoque;
 USE controleEstoque;
 
-CREATE TABLE estoque (
-    id INT NOT NULL DEFAULT 1,
-    quantidade INT NOT NULL DEFAULT 0,
-    PRIMARY KEY (id)
-);
-
-ALTER TABLE
-ADD COLUMN nome VARCHAR(100)
-
 CREATE TABLE produto (
     id INT NOT NULL IDENTITY(1000,2),
     nome VARCHAR(100) NOT NULL UNIQUE,
     valor DECIMAL(10,2) NOT NULL DEFAULT (0) CHECK((valor) >= 0),
-    quantidade INT NOT NULL,
-    estoqueID INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 0,
     
     PRIMARY KEY (id),
-    FOREIGN KEY(estoqueID) REFERENCES estoque(id)
 );
+
+CREATE TABLE estoque (
+    id INT NOT NULL DEFAULT 1,
+    quantidade INT NOT NULL DEFAULT 0,
+    nome VARCHAR(100),
+    produtoID INT NOT NULL,
+    
+    PRIMARY KEY (id),
+    FOREIGN KEY (produtoID) REFERENCES produto(id)
+);
+
+SELECT*FROM estoque
 
 CREATE TABLE cliente (
     id INT NOT NULL IDENTITY(100,2),
@@ -58,16 +59,19 @@ CREATE TABLE relatorio (
 
 CREATE TABLE produto_venda (
     produtoID INT NOT NULL,
-    vendaID INT NOT NULL
+    vendaID INT
 
     PRIMARY KEY(produtoID, vendaID),
     FOREIGN KEY(produtoID) REFERENCES produto(ID),
     FOREIGN KEY(vendaID) REFERENCES venda(ID)
 );
 
-INSERT INTO funcionario (nome, username, senha) VALUES ('admin', 'admin', '12345678');
+INSERT INTO funcionario (nome, username, senha) 
+VALUES ('admin', 'admin', '12345678');
 
-SELECT * FROM funcionario
+SELECT * FROM funcionario;
 
-ALTER TABLE relatorio 
-ALTER COLUMN vendaID INT NULL;
+INSERT INTO cliente (nome)
+VALUES ('Fulano de Tal');
+
+SELECT * FROM cliente

@@ -34,14 +34,11 @@
 					placeholder="Quantidade" />
 			</div>
 			<div class="form-group">
-				<input class="btn btn-success" type="submit" name="enviar"
-					value="Cadastrar" /> <input class="btn btn-primary" type="submit"
-					name="enviar" value="Alterar" /> <input class="btn btn-info"
-					type="submit" name="enviar" value="Buscar" /> <input
-					class="btn btn-warning" type="submit" name="enviar" value="Listar" />
-				<input class="btn btn-secondary" type="submit" name="enviar"
-					value="Entrada/Saída" />
-
+				<input class="btn btn-success" type="submit" name="enviar" value="Cadastrar" />
+				<input class="btn btn-primary" type="submit" name="enviar" value="Alterar" />
+			 	<input class="btn btn-info" type="submit" name="enviar" value="Buscar" />
+			 	<input class="btn btn-warning" type="submit" name="enviar" value="Listar" />
+				<input class="btn btn-secondary" type="submit" name="enviar" value="Entrada/Saída" />
 			</div>
 		</form>
 	</div>

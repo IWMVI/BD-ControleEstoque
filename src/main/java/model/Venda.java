@@ -12,6 +12,8 @@ public class Venda {
 	private int id;
 	private Funcionario funcionario;
 	private Cliente cliente;
-	private List<Produto> produtos;
+	private List<ItemVenda> itens;
+	private int clienteID;
+	private int funcionarioID;
 	
 }

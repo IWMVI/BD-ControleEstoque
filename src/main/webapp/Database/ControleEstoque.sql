@@ -2,76 +2,60 @@ CREATE DATABASE controleEstoque;
 USE controleEstoque;
 
 CREATE TABLE produto (
-    id INT NOT NULL IDENTITY(1000,2),
+    id INT NOT NULL IDENTITY(1,1),
     nome VARCHAR(100) NOT NULL UNIQUE,
-    valor DECIMAL(10,2) NOT NULL DEFAULT (0) CHECK((valor) >= 0),
-    quantidade INT NOT NULL DEFAULT 0,
+    valor DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK(valor >= 0),
+    quantidade INT NOT NULL DEFAULT 0
     
-    PRIMARY KEY (id),
-);
-
-CREATE TABLE estoque (
-    id INT NOT NULL DEFAULT 1,
-    quantidade INT NOT NULL DEFAULT 0,
-    nome VARCHAR(100),
-    produtoID INT NOT NULL,
-    
-    PRIMARY KEY (id),
-    FOREIGN KEY (produtoID) REFERENCES produto(id)
-);
-
-SELECT*FROM estoque
-
-CREATE TABLE cliente (
-    id INT NOT NULL IDENTITY(100,2),
-    nome VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY(id)
-);
-
-CREATE TABLE funcionario (
-    id INT NOT NULL IDENTITY (100,2),
-    nome VARCHAR(100) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8),
-
     PRIMARY KEY (id)
 );
 
+CREATE TABLE cliente (
+    id INT NOT NULL IDENTITY (1,1),
+    nome VARCHAR(100) NOT NULL
+    
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE funcionario (
+    id INT NOT NULL IDENTITY (1,1),
+    nome VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8)
+
+    PRIMARY KEY (id)
+ );
+
 CREATE TABLE venda (
-    id INT NOT NULL IDENTITY(1,1),
+    id INT NOT NULL IDENTITY (1,1),
     clienteID INT NOT NULL,
     funcionarioID INT NOT NULL,
-
+    dataVenda DATE NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    
     PRIMARY KEY (id),
-    FOREIGN KEY(clienteID) REFERENCES cliente(id),
-    FOREIGN KEY(funcionarioID) REFERENCES funcionario(id),
+    FOREIGN KEY (clienteID) REFERENCES cliente(id),
+    FOREIGN KEY (funcionarioID) REFERENCES funcionario(id)
+);
+
+CREATE TABLE venda_produto (
+    vendaID INT NOT NULL,
+    produtoID INT NOT NULL,
+    quantidade INT NOT NULL,
+    PRIMARY KEY (vendaID, produtoID),
+    FOREIGN KEY (vendaID) REFERENCES venda(id),
+    FOREIGN KEY (produtoID) REFERENCES produto(id)
 );
 
 CREATE TABLE relatorio (
     id INT NOT NULL IDENTITY (1,1),
     descricao VARCHAR(255),
-    vendaID INT NOT NULL
-
-    PRIMARY KEY(id),
-    FOREIGN KEY(vendaID) REFERENCES venda(id)
+    vendaID INT,
+    FOREIGN KEY (vendaID) REFERENCES venda(id)
 );
 
-CREATE TABLE produto_venda (
-    produtoID INT NOT NULL,
-    vendaID INT
-
-    PRIMARY KEY(produtoID, vendaID),
-    FOREIGN KEY(produtoID) REFERENCES produto(ID),
-    FOREIGN KEY(vendaID) REFERENCES venda(ID)
-);
-
-INSERT INTO funcionario (nome, username, senha) 
+INSERT INTO funcionario (nome, username, senha)
 VALUES ('admin', 'admin', '12345678');
 
-SELECT * FROM funcionario;
-
-INSERT INTO cliente (nome)
-VALUES ('Fulano de Tal');
-
-SELECT * FROM cliente
+SELECT * 
+FROM funcionario

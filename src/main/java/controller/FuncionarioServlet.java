@@ -99,9 +99,7 @@ public class FuncionarioServlet extends HttpServlet {
 				excluirFuncionario(funcionario);
 				saida = "Funcionário excluído com sucesso.";
 			}
-		} catch (ClassNotFoundException |
-
-				SQLException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			erro = e.getMessage();
 		} finally {
 			request.setAttribute("saida", saida);

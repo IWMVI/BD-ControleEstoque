@@ -43,12 +43,13 @@ public class LoginServlet extends HttpServlet {
 				erro = ("Usuário e/ou senha incorretos");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
-			saida = "Erro ao tentar autenticar usuário.";
-		}
+			erro = "Erro ao tentar autenticar usuário.";
+		} finally {
 
-		request.setAttribute("erro", erro);
-		request.setAttribute("saida", saida);
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+			request.setAttribute("erro", erro);
+			request.setAttribute("saida", saida);
+			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+			rd.forward(request, response);
+		}
 	}
 }

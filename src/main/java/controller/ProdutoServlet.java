@@ -108,7 +108,7 @@ public class ProdutoServlet extends HttpServlet {
 				}
 			}
 		} catch (ClassNotFoundException | SQLException e) {
-			saida = e.getMessage();
+			erro = e.getMessage();
 		} finally {
 			request.setAttribute("saida", saida);
 			request.setAttribute("erro", erro);

@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/produto")
 public class ProdutoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private Map<String, IProdutoCommand> commands;
+    private Map<String, ICommand> commands;
 
     public ProdutoServlet() {
         super();
@@ -37,7 +37,7 @@ public class ProdutoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String cmd = request.getParameter("enviar");
-        IProdutoCommand command = commands.get(cmd);
+        ICommand command = commands.get(cmd);
 
         if (command != null) {
             try {

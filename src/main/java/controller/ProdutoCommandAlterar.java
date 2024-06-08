@@ -8,7 +8,7 @@ import model.Produto;
 import persistence.GenericDao;
 import persistence.ProdutoDao;
 
-public class ProdutoCommandAlterar implements IProdutoCommand {
+public class ProdutoCommandAlterar implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)

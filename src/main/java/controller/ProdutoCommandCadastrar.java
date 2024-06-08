@@ -7,7 +7,7 @@ import persistence.GenericDao;
 import persistence.ProdutoDao;
 import java.sql.SQLException;
 
-public class ProdutoCommandCadastrar implements IProdutoCommand {
+public class ProdutoCommandCadastrar implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)

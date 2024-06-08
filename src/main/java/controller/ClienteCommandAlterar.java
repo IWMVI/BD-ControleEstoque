@@ -4,35 +4,31 @@ import java.sql.SQLException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Produto;
+import model.Cliente;
+import persistence.ClienteDao;
 import persistence.GenericDao;
-import persistence.ProdutoDao;
 
-public class ProdutoCommandBuscar implements ICommand {
+public class ClienteCommandAlterar implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ClassNotFoundException {
+		String id = request.getParameter("id");
 		String nome = request.getParameter("nome");
 		String saida = "";
-		Produto pCons = null;
 
-		if (nome != null && !nome.isEmpty()) {
-			Produto p = new Produto();
-			p.setNome(nome);
+		if (id != null && !id.isEmpty() && nome != null && !nome.isEmpty()) {
+			Cliente c = new Cliente();
+			c.setId(Integer.parseInt(id));
+			c.setNome(nome);
 			GenericDao gDao = new GenericDao();
-			ProdutoDao pDao = new ProdutoDao(gDao);
-			pCons = pDao.consultar(p);
+			ClienteDao cDao = new ClienteDao(gDao);
+			cDao.atualizar(c);
+			saida = "Cliente alterado com sucesso!";
 		} else {
-			saida = "Informe um nome para a busca.";
+			saida = "Campos insuficientes para atualização.";
 		}
-
-		if (pCons != null) {
-			request.setAttribute("produto", pCons);
-		} else {
-			saida = "Produto não encontrado.";
-		}
-
+		
 		request.setAttribute("saida", saida);
 	}
 }

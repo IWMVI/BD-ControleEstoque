@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import persistence.GenericDao;
 
-public class ProdutoCommandValorMedio implements IProdutoCommand {
+public class ProdutoCommandValorMedio implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)

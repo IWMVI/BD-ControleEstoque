@@ -9,7 +9,7 @@ import model.Produto;
 import persistence.EstoqueDao;
 import persistence.GenericDao;
 
-public class ProdutoCommandSemEstoque implements IProdutoCommand {
+public class ProdutoCommandSemEstoque implements ICommand {
 
 	private EstoqueDao estoqueDao;
 

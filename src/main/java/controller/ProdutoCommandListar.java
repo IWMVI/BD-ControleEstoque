@@ -11,7 +11,7 @@ import model.Produto;
 import persistence.GenericDao;
 import persistence.ProdutoDao;
 
-public class ProdutoCommandListar implements IProdutoCommand {
+public class ProdutoCommandListar implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)

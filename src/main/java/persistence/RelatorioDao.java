@@ -62,4 +62,24 @@ public class RelatorioDao implements ICrudRelatorio<Relatorio> {
 
 		return relatorios;
 	}
+	
+	public int somarVendasCliente(int clienteID) throws SQLException, ClassNotFoundException {
+	    Connection c = gDao.getConnection();
+	    String sql = "SELECT SUM(valor) AS total_vendas FROM venda WHERE clienteID = ?";
+	    
+	    PreparedStatement ps = c.prepareStatement(sql);
+	    ps.setInt(1, clienteID);
+	    ResultSet rs = ps.executeQuery();
+	    
+	    int totalVendas = 0;
+	    if (rs.next()) {
+	        totalVendas = rs.getInt("total_vendas");
+	    }
+	    
+	    rs.close();
+	    ps.close();
+	    c.close();
+	    
+	    return totalVendas;
+	}
 }

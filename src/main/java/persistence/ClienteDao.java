@@ -99,4 +99,22 @@ public class ClienteDao implements ICrud<Cliente> {
 		return cliente;
 	}
 	
+	public int contarClientes() throws SQLException, ClassNotFoundException {
+	    Connection c = gDao.getConnection();
+	    String sql = "SELECT COUNT(*) AS total FROM cliente";
+	    
+	    PreparedStatement ps = c.prepareStatement(sql);
+	    ResultSet rs = ps.executeQuery();
+	    
+	    int total = 0;
+	    if (rs.next()) {
+	        total = rs.getInt("total");
+	    }
+	    
+	    rs.close();
+	    ps.close();
+	    c.close();
+	    
+	    return total;
+	}
 }

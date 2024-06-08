@@ -152,4 +152,50 @@ public class ProdutoDao implements ICrud<Produto> {
 		ps.close();
 		c.close();
 	}
+	
+	public float calcularValorMedio() throws SQLException, ClassNotFoundException {
+	    Connection c = gDao.getConnection();
+	    String sql = "SELECT AVG(valor) AS valor_medio FROM produto";
+	    
+	    PreparedStatement ps = c.prepareStatement(sql);
+	    ResultSet rs = ps.executeQuery();
+	    
+	    float valorMedio = 0;
+	    if (rs.next()) {
+	        valorMedio = rs.getFloat("valor_medio");
+	    }
+	    
+	    rs.close();
+	    ps.close();
+	    c.close();
+	    
+	    return valorMedio;
+	}
+	
+	public List<Produto> listarProdutosComEstoque() throws SQLException, ClassNotFoundException {
+	    List<Produto> produtos = new ArrayList<>();
+	    Connection c = gDao.getConnection();
+	    String sql = "SELECT p.id, p.nome, p.valor, e.quantidade " +
+	                 "FROM produto p " +
+	                 "JOIN estoque e ON p.id = e.produtoID";
+
+	    PreparedStatement ps = c.prepareStatement(sql);
+	    ResultSet rs = ps.executeQuery();
+
+	    while (rs.next()) {
+	        Produto produto = new Produto();
+	        produto.setId(rs.getInt("id"));
+	        produto.setNome(rs.getString("nome"));
+	        produto.setValor(rs.getFloat("valor"));
+	        produto.setQuantidade(rs.getInt("quantidade"));
+	        produtos.add(produto);
+	    }
+
+	    rs.close();
+	    ps.close();
+	    c.close();
+
+	    return produtos;
+	}
+
 }

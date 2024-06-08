@@ -130,4 +130,33 @@ public class VendaDao {
 
         return venda;
     }
+    
+    public List<Venda> listarVendasDetalhadas() throws SQLException, ClassNotFoundException {
+        List<Venda> vendas = new ArrayList<>();
+        Connection c = gDao.getConnection();
+        String sql = "SELECT v.id, v.clienteID, v.funcionarioID, c.nome AS clienteNome, f.nome AS funcionarioNome " +
+                     "FROM venda v " +
+                     "JOIN cliente c ON v.clienteID = c.id " +
+                     "JOIN funcionario f ON v.funcionarioID = f.id";
+
+        PreparedStatement ps = c.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Venda venda = new Venda();
+            venda.setId(rs.getInt("id"));
+            venda.setClienteID(rs.getInt("clienteID"));
+            venda.setFuncionarioID(rs.getInt("funcionarioID"));
+            venda.setClienteNome(rs.getString("clienteNome"));
+            venda.setFuncionarioNome(rs.getString("funcionarioNome"));
+            vendas.add(venda);
+        }
+
+        rs.close();
+        ps.close();
+        c.close();
+
+        return vendas;
+    }
+
 }

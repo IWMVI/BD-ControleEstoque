@@ -118,5 +118,30 @@ public class EstoqueDao {
         ps.close();
         c.close();
     }
+    
+    public List<Produto> listarProdutosSemEstoque() throws SQLException, ClassNotFoundException {
+        List<Produto> produtos = new ArrayList<>();
+        Connection c = gDao.getConnection();
+        String sql = "SELECT p.id, p.nome, p.valor " +
+                     "FROM produto p " +
+                     "LEFT JOIN estoque e ON p.id = e.produtoID " +
+                     "WHERE e.quantidade <= 0 OR e.quantidade IS NULL";
 
+        PreparedStatement ps = c.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Produto produto = new Produto();
+            produto.setId(rs.getInt("id"));
+            produto.setNome(rs.getString("nome"));
+            produto.setValor(rs.getFloat("valor"));
+            produtos.add(produto);
+        }
+
+        rs.close();
+        ps.close();
+        c.close();
+
+        return produtos;
+    }
 }

@@ -20,11 +20,13 @@ public class ProdutoServlet extends HttpServlet {
     public ProdutoServlet() {
         super();
         commands = new HashMap<>();
-        commands.put("Cadastrar", new CadastrarProdutoCommand());
-        commands.put("Listar", new ListarProdutoCommand());
-        commands.put("Alterar", new AlterarProdutoCommand());
-        commands.put("Buscar", new BuscarProdutoCommand());
-        commands.put("Entrada/Saída", new EntradaSaidaProdutoCommand());
+        commands.put("Cadastrar", new ProdutoCommandCadastrar());
+        commands.put("Listar", new ProdutoCommandListar());
+        commands.put("Alterar", new ProdutoCommandAlterar());
+        commands.put("Buscar", new ProdutoCommandBuscar());
+        commands.put("Entrada/Saída", new ProdutoCommandEntradaSaida());
+        commands.put("Calcular Valor Médio", new ProdutoCommandValorMedio());
+        commands.put("Listar Produtos sem Estoque", new ProdutoCommandSemEstoque());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

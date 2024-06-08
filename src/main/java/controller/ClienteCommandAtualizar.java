@@ -8,7 +8,7 @@ import model.Cliente;
 import persistence.ClienteDao;
 import persistence.GenericDao;
 
-public class ClienteCommandAlterar implements ICommand {
+public class ClienteCommandAtualizar implements ICommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)

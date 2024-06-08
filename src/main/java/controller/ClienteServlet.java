@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import persistence.GenericDao;
 
 @WebServlet("/cliente")
 public class ClienteServlet extends HttpServlet {
@@ -19,10 +20,12 @@ public class ClienteServlet extends HttpServlet {
 
 	public ClienteServlet() {
 		super();
+		GenericDao gDao = new GenericDao();
 		commands = new HashMap<>();
 		commands.put("Cadastrar", new ClienteCommandCadastrar());
 		commands.put("Listar", new ClienteCommandListar());
-		commands.put("Alterar", new ClienteCommandAlterar());
+		commands.put("Atualizar", new ClienteCommandAtualizar());
+		commands.put("Contar", new ClienteCommandContar(gDao));
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/styles.css">
     <title>Clientes</title>
-    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -29,6 +28,7 @@
                 <input class="btn btn-success" type="submit" name="botao" value="Cadastrar" />
                 <input class="btn btn-primary" type="submit" name="botao" value="Listar" />
                 <input class="btn btn-info" type="submit" name="botao" value="Atualizar" />
+                <input class="btn btn-warning" type="submit" name="botao" value="Contar" />
             </div>
         </form>
     </div>
@@ -59,5 +59,18 @@
             </table>
         </div>
     </c:if>
+
+    <c:if test="${not empty quantidade}">
+        <div class="container text-center">
+            <h2 class="text-success">Quantidade de Clientes: <c:out value="${quantidade}" /></h2>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty erro}">
+        <div class="container text-center">
+            <h2 class="text-danger"><c:out value="${erro}" /></h2>
+        </div>
+    </c:if>
+
 </body>
 </html>

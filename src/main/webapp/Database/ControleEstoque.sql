@@ -58,14 +58,3 @@ CREATE TABLE relatorio (
 );
 
 SELECT * FROM funcionario;
-
-CREATE TABLE estoque (
-    id INT NOT NULL IDENTITY(1,1),
-    produtoID INT NOT NULL,
-    quantidade INT NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (produtoID) REFERENCES produto(id)
-);
-
-
-

@@ -6,6 +6,7 @@ public class Funcionario {
 	private String nome;
 	private String userName;
 	private String senha;
+	private int totalVendas;
 
 	public int getId() {
 		return id;
@@ -23,20 +24,28 @@ public class Funcionario {
 		this.nome = nome;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
 	public String getSenha() {
 		return senha;
 	}
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public int getTotalVendas() {
+		return totalVendas;
+	}
+
+	public void setTotalVendas(int totalVendas) {
+		this.totalVendas = totalVendas;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

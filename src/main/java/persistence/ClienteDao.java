@@ -9,112 +9,111 @@ import java.util.List;
 
 import model.Cliente;
 
-public class ClienteDao implements ICrud<Cliente> {
-
+public class ClienteDao {
 	private GenericDao gDao;
 
 	public ClienteDao(GenericDao gDao) {
 		this.gDao = gDao;
 	}
 
-	@Override
-	public void inserir(Cliente cliente) throws SQLException, ClassNotFoundException {
+	public void inserir(Cliente cliente) throws ClassNotFoundException, SQLException {
 		Connection c = gDao.getConnection();
-		String sql = "INSERT INTO cliente (nome) VALUES (?)";
-		
+		String sql = "INSERT INTO cliente (nome, qtdCompras) VALUES (?, ?)";
+
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, cliente.getNome());
+		ps.setInt(2, cliente.getQtdCompras());
+
 		ps.execute();
+
 		ps.close();
 		c.close();
 	}
 
-	@Override
-	public void atualizar(Cliente cliente) throws SQLException, ClassNotFoundException {
+	public List<Cliente> listar() throws ClassNotFoundException, SQLException {
+		List<Cliente> clientes = new ArrayList<>();
 		Connection c = gDao.getConnection();
-		String sql = "UPDATE cliente SET nome = ? WHERE id = ?";
-		
-		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setString(1, cliente.getNome());
-		ps.setInt(2, cliente.getId());
-		ps.execute();
-		ps.close();
-		c.close();
-	}
+		String sql = "SELECT * FROM cliente";
 
-	@Override
-	public void excluir(Cliente cliente) throws SQLException, ClassNotFoundException {
-		Connection c = gDao.getConnection();
-		String sql = "DELETE cliente WHERE id = ?";
-		
 		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setInt(1, cliente.getId());
-		ps.execute();
-		ps.close();
-		c.close();
-	}
-
-	@Override
-	public Cliente consultar(Cliente cliente) throws SQLException, ClassNotFoundException {
-		Connection c = gDao.getConnection();
-		String sql = "SELECT id, nome FROM cliente WHERE id = ?";
-		
-		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setInt(1, cliente.getId());
 		ResultSet rs = ps.executeQuery();
-		
-		if (rs.next()) {
+
+		while (rs.next()) {
+			Cliente cliente = new Cliente();
 			cliente.setId(rs.getInt("id"));
 			cliente.setNome(rs.getString("nome"));
-		
+			cliente.setQtdCompras(rs.getInt("qtdCompras"));
+			clientes.add(cliente);
 		}
-		
+
 		rs.close();
 		ps.close();
 		c.close();
 
-		return cliente;
+		return clientes;
 	}
 
-	@Override
-	public List<Cliente> listar() throws SQLException, ClassNotFoundException {
-		List<Cliente> cliente = new ArrayList<>();
-		Connection c= gDao.getConnection();
-		String sql = "SELECT id, nome FROM cliente";
-		
+	public void atualizar(Cliente cliente) throws ClassNotFoundException, SQLException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE cliente SET nome = ?, qtdCompras = ? WHERE id = ?";
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setString(1, cliente.getNome());
+		ps.setInt(2, cliente.getQtdCompras());
+		ps.setInt(3, cliente.getId());
+
+		ps.executeUpdate();
+
+		ps.close();
+		c.close();
+	}
+
+	public int contarClientes() throws ClassNotFoundException, SQLException {
+		Connection c = gDao.getConnection();
+		String sql = "SELECT COUNT(*) AS total FROM cliente";
+
 		PreparedStatement ps = c.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
-		
-		while(rs.next()) {
-			Cliente cli = new Cliente();
-			cli.setId(rs.getInt("id"));
-			cli.setNome(rs.getString("nome"));
-			cliente.add(cli);
+
+		int total = 0;
+		if (rs.next()) {
+			total = rs.getInt("total");
 		}
-		
+
 		rs.close();
 		ps.close();
 		c.close();
-		
-		return cliente;
+
+		return total;
 	}
-	
-	public int contarClientes() throws SQLException, ClassNotFoundException {
-	    Connection c = gDao.getConnection();
-	    String sql = "SELECT COUNT(*) AS total FROM cliente";
-	    
-	    PreparedStatement ps = c.prepareStatement(sql);
-	    ResultSet rs = ps.executeQuery();
-	    
-	    int total = 0;
-	    if (rs.next()) {
-	        total = rs.getInt("total");
-	    }
-	    
-	    rs.close();
-	    ps.close();
-	    c.close();
-	    
-	    return total;
+
+	public List<Cliente> listarClientesComTotalCompras() throws ClassNotFoundException, SQLException {
+		List<Cliente> clientes = new ArrayList<>();
+		Connection c = gDao.getConnection();
+	    String sql = "SELECT " +
+                "c.id, c.nome, " +
+                "SUM(p.valor * vp.quantidade) AS totalCompras " +
+                "FROM cliente c " +
+                "LEFT JOIN venda v ON c.id = v.clienteID " +
+                "LEFT JOIN venda_produto vp ON v.id = vp.vendaID " +
+                "LEFT JOIN produto p ON vp.produtoID = p.id " +
+                "GROUP BY c.id, c.nome";
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			Cliente cliente = new Cliente();
+			cliente.setId(rs.getInt("id"));
+			cliente.setNome(rs.getString("nome"));
+			cliente.setTotalCompras(rs.getFloat("totalCompras"));
+			clientes.add(cliente);
+		}
+
+		rs.close();
+		ps.close();
+		c.close();
+
+		return clientes;
 	}
 }

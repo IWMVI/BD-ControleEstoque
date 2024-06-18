@@ -32,15 +32,16 @@
 				</tr>
 				<tr>
 					<td><label for="password">Senha</label> <input type="password"
-						id="senha" name="senha" placeholder="Senha"></td>
+						id="password" name="password" placeholder="Senha"></td>
 				</tr>
 				<tr>
 					<td colspan="4">
 						<input type="submit" name="botao" value="Cadastrar"> 
 						<input type="submit" name="botao" value="Listar"> 
 						<input type="submit" name="botao" value="Buscar">
-						<input type="submit" name="botao" value="Alterar"> 
 						<input type="submit" name="botao" value="Excluir">
+						<input type="submit" name="botao" value="Quantidade em vendas">
+						<input type="submit" name="botao" value="Valor em vendas">
 					</td>
 				</tr>
 			</table>
@@ -62,7 +63,6 @@
 					<tr class="table-header">
 						<th>ID</th>
 						<th>Nome</th>
-						<th>UserName</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -70,8 +70,6 @@
 						<tr>
 							<td>${ p.id }</td>
 							<td>${ p.nome }</td>
-							<td>${ p.userName } </td> 
-<!-- 							userName == Declaração na classe Funcionario -->
 						</tr>
 					</c:forEach>
 				</tbody>

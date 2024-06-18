@@ -4,6 +4,8 @@ public class Cliente {
 
 	private int id;
 	private String nome;
+	private float totalCompras;
+	private int qtdCompras;
 
 	public int getId() {
 		return id;
@@ -21,4 +23,19 @@ public class Cliente {
 		this.nome = nome;
 	}
 
+	public float getTotalCompras() {
+		return totalCompras;
+	}
+
+	public void setTotalCompras(float totalCompras) {
+		this.totalCompras = totalCompras;
+	}
+
+	public void setQtdCompras(int qtdCompras) {
+		this.qtdCompras = qtdCompras;
+	}
+
+	public int getQtdCompras() {
+		return qtdCompras;
+	}
 }

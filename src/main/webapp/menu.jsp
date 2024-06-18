@@ -8,9 +8,10 @@
 <meta charset="ISO-8859-1">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Relatórios</title>
-<link rel="stylesheet" href="./css/styles.css">
+    <meta name="viewport"
+	content="width=device-width, initial-scale=1.0">
+    <title>Relatórios</title>
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <title></title>
 </head>
@@ -22,6 +23,7 @@
 			<li><a href="produto.jsp">Produto</a></li>
 			<li><a href="cliente.jsp">Cliente</a></li>
 			<li><a href="relatorio.jsp">Relatório</a></li>
+			<li><a href="vendas.jsp">Vendas</a>
 		</ul>
 	</nav>
 </body>

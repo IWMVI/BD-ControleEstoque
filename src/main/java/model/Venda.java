@@ -1,61 +1,80 @@
 package model;
 
+import java.sql.Date;
 import java.util.List;
 
 public class Venda {
-    private int id;
-    private int clienteID;
-    private int funcionarioID;
-    private String clienteNome;
-    private String funcionarioNome;
-    private List<ItemVenda> itens;
+	private int id;
+	private int clienteID;
+	private int funcionarioID;
+	private String clienteNome;
+	private String funcionarioNome;
+	private Date dataVenda;
+	private float total;
+	private List<ItemVenda> itens;
 
-    // Getters and setters
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getClienteID() {
-        return clienteID;
-    }
+	public int getClienteID() {
+		return clienteID;
+	}
 
-    public void setClienteID(int clienteID) {
-        this.clienteID = clienteID;
-    }
+	public void setClienteID(int clienteID) {
+		this.clienteID = clienteID;
+	}
 
-    public int getFuncionarioID() {
-        return funcionarioID;
-    }
+	public int getFuncionarioID() {
+		return funcionarioID;
+	}
 
-    public void setFuncionarioID(int funcionarioID) {
-        this.funcionarioID = funcionarioID;
-    }
+	public void setFuncionarioID(int funcionarioID) {
+		this.funcionarioID = funcionarioID;
+	}
 
-    public String getClienteNome() {
-        return clienteNome;
-    }
+	public String getClienteNome() {
+		return clienteNome;
+	}
 
-    public void setClienteNome(String clienteNome) {
-        this.clienteNome = clienteNome;
-    }
+	public void setClienteNome(String clienteNome) {
+		this.clienteNome = clienteNome;
+	}
 
-    public String getFuncionarioNome() {
-        return funcionarioNome;
-    }
+	public String getFuncionarioNome() {
+		return funcionarioNome;
+	}
 
-    public void setFuncionarioNome(String funcionarioNome) {
-        this.funcionarioNome = funcionarioNome;
-    }
+	public void setFuncionarioNome(String funcionarioNome) {
+		this.funcionarioNome = funcionarioNome;
+	}
 
-    public List<ItemVenda> getItens() {
-        return itens;
-    }
+	public Date getDataVenda() {
+		return dataVenda;
+	}
 
-    public void setItens(List<ItemVenda> itens) {
-        this.itens = itens;
-    }
+	public void setDataVenda(Date dataVenda) {
+		this.dataVenda = dataVenda;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
+	}
+
+	public List<ItemVenda> getItens() {
+		return itens;
+	}
+
+	public void setItens(List<ItemVenda> itens) {
+		this.itens = itens;
+	}
+
 }

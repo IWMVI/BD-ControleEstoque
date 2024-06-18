@@ -30,81 +30,87 @@ public class FuncionarioServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request, response);
-
 		String cmd = request.getParameter("botao");
 		String id = request.getParameter("id");
 		String nome = request.getParameter("nome");
 		String username = request.getParameter("username");
-		String senha = request.getParameter("senha");
+		String senha = request.getParameter("password");
 
 		String saida = "";
 		String erro = "";
 
-		Funcionario funcionario = new Funcionario();
+		Funcionario f = new Funcionario();
 		List<Funcionario> funcionarios = new ArrayList<>();
 
 		try {
-			if (cmd.equals("Cadastrar")) {
-				if (nome != null && !nome.isEmpty() && username != null && !username.isEmpty() && senha != null
-						&& !senha.isEmpty()) {
-					if (senha.length() >= 8) {
-						funcionario.setNome(nome);
-						funcionario.setUserName(username);
-						funcionario.setSenha(senha);
-						cadastrarFuncionario(funcionario);
-						saida = "Funcionário cadastrado com sucesso!";
-					} else {
-						saida = "Senha necessita de no mínimo 8 caracteres.";
-					}
+			if (nome != null && !nome.isEmpty() && username != null && !username.isEmpty() && senha != null
+					&& !senha.isEmpty()) {
+				if (senha.length() >= 8) {
+					f.setNome(nome);
+					f.setUserName(username);
+					f.setSenha(senha);
+					cadastrarFuncionario(f);
+					saida = "Funcionário cadastrado com sucesso!";
 				} else {
-					saida = "Dados insuficientes para realizar o cadastro.";
+					saida = "Senha deve possuir no mínimo 8 caracteres!";
 				}
+			} else {
+				saida = "Informações insuficientes para o cadastro de um funcionário.";
 			}
 			if (cmd.equals("Alterar")) {
-				if (nome != null && !nome.isEmpty() && senha != null && !senha.isEmpty()) {
-					if (senha.length() >= 8) {
-						funcionario.setId(Integer.parseInt(id));
-						funcionario.setNome(nome);
-						funcionario.setSenha(senha);
-						alterarFuncionario(funcionario);
-						saida = "Dados alterados com sucesso.";
-					} else {
-						saida = "Senha necessita de no mínimo 8 caracteres.";
-					}
+				if (id != null && !id.isEmpty()) {
+					f.setId(Integer.parseInt(id));
+					f.setNome(nome);
+					alterarFuncionario(f);
+					saida = "Funcionário alterado com sucesso!";
 				} else {
-					saida = "Dados insuficientes para alteração do cadastro";
+					saida = "É necessário informar um ID para alteração do funcionário!";
 				}
 			}
 			if (cmd.equals("Listar")) {
 				funcionarios = listarFuncionarios();
 			}
 			if (cmd.equals("Buscar")) {
-				Funcionario fCon = null;
 				if (id != null && !id.isEmpty()) {
-					funcionario.setId(Integer.parseInt(id));
-					if (nome != null && !nome.isEmpty()) {
-						funcionario.setNome(nome);
-					}
-					fCon = buscarFuncionario(funcionario);
-				}
-				if (fCon != null) {
-					funcionarios.add(fCon);
+					int funcionarioId = Integer.parseInt(id);
+					Funcionario funcionarioEncontrado = buscarFuncionario(funcionarioId);
+					funcionarios.add(funcionarioEncontrado);
 				} else {
-					saida = "Funcionário não encontrado.";
+					saida = "É necessário informar um ID para busca.";
 				}
 			}
-			if (cmd.equals("Excluir")) {
-				funcionario.setId(Integer.parseInt(id));
-				excluirFuncionario(funcionario);
-				saida = "Funcionário excluído com sucesso.";
+			if (cmd.equals("Excluir"))
+				if (id != null && !id.isEmpty()) {
+					f.setId(Integer.parseInt(id));
+					excluirFuncionario(f);
+					saida = "Funcionário excluído com sucesso!";
+				} else {
+					saida = "É necessário informar um ID para exclusão de um funcionário.";
+				}
+			if (cmd.equals("Valor em vendas")) {
+				if (id != null && !id.isEmpty()) {
+					f.setId(Integer.parseInt(id));
+					float valor = valorVendas(f);
+					saida = "Valor em vendas R$: " + valor;
+				} else {
+					saida = "Informe um ID para verificar o total em vendas.";
+				}
+			}
+			if (cmd.equals("Quantidade em vendas")) {
+				if (id != null && !id.isEmpty()) {
+					f.setId(Integer.parseInt(id));
+					int qtd = qtdVendas(f);
+					saida = "Quantidade de vendas realizadas: " + qtd;
+				} else {
+					saida = "Informe um ID para verificar as vendas.";
+				}
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			erro = e.getMessage();
 		} finally {
 			request.setAttribute("saida", saida);
 			request.setAttribute("erro", erro);
-			request.setAttribute("funcionario", funcionario);
+			request.setAttribute("funcionario", f);
 			request.setAttribute("funcionarios", funcionarios);
 
 			RequestDispatcher rd = request.getRequestDispatcher("funcionario.jsp");
@@ -112,46 +118,56 @@ public class FuncionarioServlet extends HttpServlet {
 		}
 	}
 
-	private void cadastrarFuncionario(Funcionario funcionario) throws ClassNotFoundException, SQLException {
+	private void cadastrarFuncionario(Funcionario f) throws ClassNotFoundException, SQLException {
 		GenericDao gDao = new GenericDao();
-		FuncionarioDao fDao = new FuncionarioDao(gDao);
-
-		fDao.inserir(funcionario);
+		FuncionarioDao pDao = new FuncionarioDao(gDao);
+		pDao.inserir(f);
 	}
 
-	private void alterarFuncionario(Funcionario funcionario) throws ClassNotFoundException, SQLException {
+	private void alterarFuncionario(Funcionario f) throws ClassNotFoundException, SQLException {
 		GenericDao gDao = new GenericDao();
-		FuncionarioDao fDao = new FuncionarioDao(gDao);
-
-		fDao.atualizar(funcionario);
-	}
-
-	private Funcionario buscarFuncionario(Funcionario funcionario) throws ClassNotFoundException, SQLException {
-		GenericDao gDao = new GenericDao();
-		FuncionarioDao fDao = new FuncionarioDao(gDao);
-
-		Funcionario fCon = fDao.consultar(funcionario);
-
-		if (fCon != null) {
-			return fCon;
-		} else {
-			return null;
-		}
+		FuncionarioDao pDao = new FuncionarioDao(gDao);
+		pDao.atualizar(f);
 	}
 
 	private List<Funcionario> listarFuncionarios() throws ClassNotFoundException, SQLException {
 		GenericDao gDao = new GenericDao();
-		FuncionarioDao fDao = new FuncionarioDao(gDao);
-
-		List<Funcionario> funcionarios = fDao.listar();
+		FuncionarioDao pDao = new FuncionarioDao(gDao);
+		List<Funcionario> funcionarios = pDao.listar();
 
 		return funcionarios;
 	}
 
-	private void excluirFuncionario(Funcionario funcionario) throws ClassNotFoundException, SQLException {
+	private Funcionario buscarFuncionario(int id) throws ClassNotFoundException, SQLException {
+		GenericDao gDao = new GenericDao();
+		FuncionarioDao pDao = new FuncionarioDao(gDao);
+		Funcionario funcionario = new Funcionario();
+		funcionario.setId(id);
+
+		return pDao.consultar(funcionario);
+	}
+
+	private void excluirFuncionario(Funcionario f) throws ClassNotFoundException, SQLException {
+		GenericDao gDao = new GenericDao();
+		FuncionarioDao pDao = new FuncionarioDao(gDao);
+		pDao.excluir(f);
+	}
+
+	private int qtdVendas(Funcionario funcionario) throws ClassNotFoundException, SQLException {
+		GenericDao gDao = new GenericDao();
+		FuncionarioDao fDao = new FuncionarioDao(gDao);
+		int qtd = fDao.qtdVendas(funcionario);
+
+		return qtd;
+	}
+
+	private float valorVendas(Funcionario funcionario) throws ClassNotFoundException, SQLException {
 		GenericDao gDao = new GenericDao();
 		FuncionarioDao fDao = new FuncionarioDao(gDao);
 
-		fDao.excluir(funcionario);
+		float valor = fDao.valorVenda(funcionario);
+
+		return valor;
 	}
+
 }

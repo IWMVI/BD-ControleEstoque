@@ -6,11 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="./css/styles.css">
 <title>Relatórios</title>
 </head>
 <body>
-
 	<%@ include file="menu.jsp"%>
 
 	<div class="container text-center my-4">
@@ -18,13 +16,13 @@
 			<h2>Relatório</h2>
 			<table>
 				<tr>
-					<input type="submit" name="botao" id="botao" value="Listar"
-						class="btn btn-primary" />
+					<td><input class="listar" type="submit" name="botao" value="Listar" /></td>
+					<td><input class="contar" type="submit" name="botao" value="Vendas cliente" /></td>
+					<td><input class="total" type="submit" name="botao" value="Total" /></td>
 				</tr>
 			</table>
 		</form>
 	</div>
-
 
 	<c:if test="${ not empty relatorios }">
 		<div class="container text-center">
@@ -46,6 +44,5 @@
 			</table>
 		</div>
 	</c:if>
-
 </body>
 </html>

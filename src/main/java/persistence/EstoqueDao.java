@@ -11,137 +11,168 @@ import model.Produto;
 
 public class EstoqueDao {
 
-    private GenericDao gDao;
+	private GenericDao gDao;
 
-    public EstoqueDao(GenericDao gDao) {
-        this.gDao = gDao;
-    }
+	public EstoqueDao(GenericDao gDao) {
+		this.gDao = gDao;
+	}
 
-    public void inserir(Produto p, int quantidade) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
+	public void inserir(Produto p, int quantidade) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
 
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, quantidade);
-        ps.setInt(2, p.getId());
-        ps.executeUpdate();
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, quantidade);
+		ps.setInt(2, p.getId());
+		ps.executeUpdate();
 
-        ps.close();
-        c.close();
-    }
+		ps.close();
+		c.close();
+	}
 
+	public void atualizar(Estoque estoque) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE estoque SET quantidade = ? WHERE id = ?";
 
-    public void atualizar(Estoque estoque) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, estoque.getQuantidade());
-        ps.setInt(2, estoque.getId());
-        ps.execute();
-        ps.close();
-        c.close();
-    }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, estoque.getQuantidade());
+		ps.setInt(2, estoque.getId());
+		ps.executeUpdate();
 
-    public void excluir(Estoque estoque) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "DELETE FROM estoque WHERE id = ?";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, estoque.getId());
-        ps.execute();
-        ps.close();
-        c.close();
-    }
+		ps.close();
+		c.close();
+	}
 
-    public List<Estoque> listar() throws SQLException, ClassNotFoundException {
-        List<Estoque> estoques = new ArrayList<>();
-        Connection c = gDao.getConnection();
-        String sql = "SELECT id, quantidade FROM estoque";
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+	public void excluir(Estoque estoque) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "DELETE FROM estoque WHERE id = ?";
 
-        while (rs.next()) {
-            Estoque estoque = new Estoque();
-            estoque.setId(rs.getInt("id"));
-            estoque.setQuantidade(rs.getInt("quantidade"));
-            estoques.add(estoque);
-        }
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, estoque.getId());
+		ps.executeUpdate();
 
-        rs.close();
-        ps.close();
-        c.close();
+		ps.close();
+		c.close();
+	}
 
-        return estoques;
-    }
+	public List<Estoque> listar() throws SQLException, ClassNotFoundException {
+		List<Estoque> estoques = new ArrayList<>();
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id, quantidade FROM estoque";
 
-    public Estoque consultarPorId(int id) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql = "SELECT nome, quantidade FROM estoque WHERE id = ?"; 
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
 
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			Estoque estoque = new Estoque();
+			estoque.setId(rs.getInt("id"));
+			estoque.setQuantidade(rs.getInt("quantidade"));
+			estoques.add(estoque);
+		}
 
-        Estoque estoque = null;
-        if (rs.next()) {
-            estoque = new Estoque();
-            estoque.setId(id);
-            estoque.setNome(rs.getString("nome"));
-            estoque.setQuantidade(rs.getInt("quantidade"));
-        }
+		rs.close();
+		ps.close();
+		c.close();
 
-        rs.close();
-        ps.close();
-        c.close();
+		return estoques;
+	}
 
-        return estoque;
-    }
+	public Estoque consultarPorId(int id) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id, quantidade FROM estoque WHERE id = ?";
 
-    
-    public void adicionarQuantidade(int quantidade) throws SQLException, ClassNotFoundException {
-        Connection c = gDao.getConnection();
-        String sql;
-        
-        if (quantidade >= 0) {
-            sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
-        } else {
-            sql = "UPDATE estoque SET quantidade = quantidade - ? WHERE id = ?";
-            quantidade = Math.abs(quantidade);
-        }
-        
-        PreparedStatement ps = c.prepareStatement(sql);
-        ps.setInt(1, quantidade);
-        ps.setInt(2, 1);
-        ps.executeUpdate();
-        ps.close();
-        c.close();
-    }
-    
-    public List<Produto> listarProdutosSemEstoque() throws SQLException, ClassNotFoundException {
-        List<Produto> produtos = new ArrayList<>();
-        Connection c = gDao.getConnection();
-        String sql = "SELECT p.id, p.nome, p.valor " +
-                     "FROM produto p " +
-                     "LEFT JOIN estoque e ON p.id = e.produtoID " +
-                     "WHERE e.quantidade <= 0 OR e.quantidade IS NULL";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
 
-        PreparedStatement ps = c.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+		Estoque estoque = null;
+		if (rs.next()) {
+			estoque = new Estoque();
+			estoque.setId(id);
+			estoque.setQuantidade(rs.getInt("quantidade"));
+		}
 
-        while (rs.next()) {
-            Produto produto = new Produto();
-            produto.setId(rs.getInt("id"));
-            produto.setNome(rs.getString("nome"));
-            produto.setValor(rs.getFloat("valor"));
-            produtos.add(produto);
-        }
+		rs.close();
+		ps.close();
+		c.close();
 
-        rs.close();
-        ps.close();
-        c.close();
+		return estoque;
+	}
 
-        return produtos;
-    }
+	public void adicionarQuantidade(int produtoId, int quantidade) throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql;
+
+		if (quantidade >= 0) {
+			sql = "UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?";
+		} else {
+			sql = "UPDATE estoque SET quantidade = quantidade - ? WHERE id = ?";
+			quantidade = Math.abs(quantidade);
+		}
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, quantidade);
+		ps.setInt(2, produtoId);
+		ps.executeUpdate();
+
+		ps.close();
+		c.close();
+	}
+
+	public List<Produto> listarProdutosSemEstoque() throws SQLException, ClassNotFoundException {
+		List<Produto> produtos = new ArrayList<>();
+		Connection c = gDao.getConnection();
+		String sql = "SELECT p.id, p.nome, p.valor " + "FROM produto p " + "LEFT JOIN estoque e ON p.id = e.produtoID "
+				+ "WHERE e.quantidade <= 0 OR e.quantidade IS NULL";
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			Produto produto = new Produto();
+			produto.setId(rs.getInt("id"));
+			produto.setNome(rs.getString("nome"));
+			produto.setValor(rs.getFloat("valor"));
+			produtos.add(produto);
+		}
+
+		rs.close();
+		ps.close();
+		c.close();
+
+		return produtos;
+	}
+
+	public int calcularValorTotalEstoque() throws SQLException, ClassNotFoundException {
+		Connection c = gDao.getConnection();
+		String sql = "SELECT SUM(p.valor * e.quantidade) AS total_estoque FROM produto p JOIN estoque e ON p.id = e.produtoID";
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+
+		int totalEstoque = 0;
+		if (rs.next()) {
+			totalEstoque = rs.getInt("total_estoque");
+		}
+
+		rs.close();
+		ps.close();
+		c.close();
+
+		return totalEstoque;
+	}
+
+	public void removerQuantidade(int produtoId, int quantidade) throws ClassNotFoundException, SQLException {
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE produto SET quantidade = quantidade + ? WHERE id = ?";
+
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, quantidade);
+		ps.setInt(2, produtoId);
+		ps.executeUpdate();
+
+		ps.close();
+		c.close();
+	}
+
 }

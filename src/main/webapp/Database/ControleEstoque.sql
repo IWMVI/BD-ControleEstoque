@@ -5,26 +5,30 @@ CREATE TABLE produto (
     id INT NOT NULL IDENTITY(1,1),
     nome VARCHAR(100) NOT NULL UNIQUE,
     valor DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK(valor >= 0),
-    quantidade INT NOT NULL DEFAULT 0
-    
+    quantidade INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE cliente (
     id INT NOT NULL IDENTITY (1,1),
-    nome VARCHAR(100) NOT NULL
-    
+    nome VARCHAR(100) NOT NULL,
+    qtdCompras INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
+
+ALTER TABLE cliente
+ADD CONSTRAINT CK__cliente__qtdComp__3E52440B CHECK(qtdCompras >= 0);
 
 CREATE TABLE funcionario (
     id INT NOT NULL IDENTITY (1,1),
     nome VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8)
-
+    senha VARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8),
     PRIMARY KEY (id)
- );
+);
+
+INSERT INTO funcionario (nome, username, senha)
+VALUES ('admin', 'admin', '12345678');
 
 CREATE TABLE venda (
     id INT NOT NULL IDENTITY (1,1),
@@ -32,7 +36,6 @@ CREATE TABLE venda (
     funcionarioID INT NOT NULL,
     dataVenda DATE NOT NULL,
     total DECIMAL(10,2) NOT NULL,
-    
     PRIMARY KEY (id),
     FOREIGN KEY (clienteID) REFERENCES cliente(id),
     FOREIGN KEY (funcionarioID) REFERENCES funcionario(id)
@@ -54,8 +57,15 @@ CREATE TABLE relatorio (
     FOREIGN KEY (vendaID) REFERENCES venda(id)
 );
 
-INSERT INTO funcionario (nome, username, senha)
-VALUES ('admin', 'admin', '12345678');
+SELECT * FROM funcionario;
 
-SELECT * 
-FROM funcionario
+CREATE TABLE estoque (
+    id INT NOT NULL IDENTITY(1,1),
+    produtoID INT NOT NULL,
+    quantidade INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (produtoID) REFERENCES produto(id)
+);
+
+
+

@@ -8,6 +8,7 @@ public class Relatorio {
 	private String descricao;
 	private List<Produto> produtos;
 	private int vendaID;
+	private int totalVendas;
 
 	public int getId() {
 		return id;
@@ -39,6 +40,14 @@ public class Relatorio {
 
 	public void setVendaID(int vendaID) {
 		this.vendaID = vendaID;
+	}
+
+	public int getTotalVendas() {
+		return totalVendas;
+	}
+
+	public void setTotalVendas(int totalVendas) {
+		this.totalVendas = totalVendas;
 	}
 
 }

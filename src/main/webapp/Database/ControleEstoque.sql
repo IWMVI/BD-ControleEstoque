@@ -3,15 +3,21 @@ USE controleEstoque;
 
 CREATE TABLE produto (
     id INT NOT NULL IDENTITY(1,1),
-    nome VARCHAR(100) NOT NULL UNIQUE,
+    nome NVARCHAR(100) NOT NULL UNIQUE,
     valor DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK(valor >= 0),
     quantidade INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
+CREATE TABLE estoque (
+    id INT NOT NULL PRIMARY KEY,
+    quantidade INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (id) REFERENCES produto(id)
+);
+
 CREATE TABLE cliente (
     id INT NOT NULL IDENTITY (1,1),
-    nome VARCHAR(100) NOT NULL,
+    nome NVARCHAR(100) NOT NULL,
     qtdCompras INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -21,9 +27,9 @@ ADD CONSTRAINT CK__cliente__qtdComp__3E52440B CHECK(qtdCompras >= 0);
 
 CREATE TABLE funcionario (
     id INT NOT NULL IDENTITY (1,1),
-    nome VARCHAR(100) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8),
+    nome NVARCHAR(100) NOT NULL,
+    username NVARCHAR(50) NOT NULL UNIQUE,
+    senha NVARCHAR(255) NOT NULL CHECK(LEN(senha) >= 8),
     PRIMARY KEY (id)
 );
 
@@ -52,7 +58,7 @@ CREATE TABLE venda_produto (
 
 CREATE TABLE relatorio (
     id INT NOT NULL IDENTITY (1,1),
-    descricao VARCHAR(255),
+    descricao NVARCHAR(255),
     vendaID INT,
     FOREIGN KEY (vendaID) REFERENCES venda(id)
 );
